@@ -63,3 +63,17 @@ nav ul li.dropdown ul.dropdown-content {
 nav ul li.dropdown:hover ul.dropdown-content {
     display: block;
 }
+
+.hidden {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .md\:hidden {
+        display: none;
+    }
+
+    .md\:block {
+        display: block;
+    }
+}
