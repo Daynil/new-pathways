@@ -1,15 +1,23 @@
 :root {
     --primary: 	hsl(174, 100%, 29%);
-    --primary-hover: hsl(174, 100%, 26%);
+    --primary-hover-bg: hsl(174, 100%, 26%);
+    --primary-hover-fg: hsl(174, 100%, 40%);
+}
+
+@font-face {
+    font-family: 'WorkSans-Regular';
+    src: url('WorkSans-Regular.ttf')
 }
 
 html, body {
     margin: 0;
     padding: 0;
+    font-family: 'WorkSans-Regular';
 }
 
 h1 {
-    color: var(--primary)
+    text-align: center;
+    font-size: 46px;
 }
 
 .transition {
@@ -18,22 +26,38 @@ h1 {
     transition-duration: 150ms;
 }
 
+.push {
+    margin-left: auto;
+}
+
+nav {
+    background-color: var(--primary);
+    height: 64px;
+}
+
 nav ul {
+    display: flex;
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: var(--primary);
 }
-    
-nav li {
-    float: left;
+
+.base-nav {
+    padding: 7px 30px;
+}
+
+.base-nav-item {
+    margin-left: 4px;
+}
+
+nav .logo {
+    position: relative;
+    top: -4px;
 }
 
 nav li a {
     display: block;
     color: white;
-    text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 
@@ -44,36 +68,61 @@ nav li a {
     transition-duration: 200ms;
 }
 
-nav li a:hover {
-    background-color: var(--primary-hover);
+nav .dropdown-content a {
+    color: black;
 }
 
-nav ul li.dropdown {
+nav li a:hover {
+    background-color: var(--primary-hover-bg);
+}
+
+nav .dropdown-content a:hover {
+    background-color: rgb(229 231 235);
+}
+
+.dropdown {
     position: relative;
 }
   
-nav ul li.dropdown ul.dropdown-content {
+.dropdown-content {
+    width: 250px;
     display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #333;
+    background-color: white;
+    border-radius: 5px;
+
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.5);
 }
   
-nav ul li.dropdown:hover ul.dropdown-content {
+.dropdown:hover .dropdown-content {
     display: block;
 }
 
-.hidden {
-    display: none;
+article {
+    max-width: 768px;
+    margin: auto;
+    font-size: 18px;
+    line-height: 26px;
 }
 
-@media (min-width: 768px) {
-    .md\:hidden {
-        display: none;
-    }
+article figure {
+    margin: 0;
+}
 
-    .md\:block {
-        display: block;
-    }
+article figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+article a {
+    color: var(--primary);
+
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+article a:hover {
+    color: var(--primary-hover-fg);
 }

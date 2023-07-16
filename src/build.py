@@ -52,13 +52,15 @@ def build():
     for menu_item in menu:
         item_url_parts = menu_item["url"].split("/")
         if item_url_parts[0] == "":
-            NavItem(
-                menu_item["ID"],
-                menu_item["title"],
-                0,
-                menu_item["menu_order"],
-                "",
-                [],
+            nav_arr.append(
+                NavItem(
+                    menu_item["ID"],
+                    menu_item["title"],
+                    0,
+                    menu_item["menu_order"],
+                    "",
+                    [],
+                )
             )
             continue
 
@@ -81,22 +83,17 @@ def build():
     pages = wp_get_all("pages")
 
     anchors = []
-    parent_items: list[NavItem] = []
+    parent_items: list[NavItem] = [item for item in nav_arr if item.parent_wp_id == 0]
     for parent in nav_arr:
-        if parent.parent_wp_id == 0:
-            parent_items.append(parent)
-            continue
-
         parent.children = [
             child for child in nav_arr if child.parent_wp_id == parent.wp_id
         ]
         if len(parent.children) > 0:
             anchors.append({"id": parent.wp_id, "el": None})
 
-        parent_items.append(parent)
-
-    main_menu = "<ul>"
+    main_menu = '<ul class="base-nav"><span class="logo"><img src="logo.png" /></span><span class="push"></span>'
     parent_items.sort(key=lambda item: item.sort_order)
+
     for parent in parent_items:
         if len(parent.children) > 0:
             submenu = '<ul class="dropdown-content">'
@@ -104,21 +101,23 @@ def build():
             parent.children.sort(key=lambda item: item.sort_order)
             for child in parent.children:
                 submenu += (
-                    f"<li><a href=/{child.target_slug}.html>{child.name}</a></li>"
+                    f'<li><a href="/{child.target_slug}.html">{child.name}</a></li>'
                 )
             submenu += "</ul>"
             main_menu += (
-                f'<li class="dropdown"><a href="#">{parent.name}</a>'
+                f'<li class="dropdown base-nav-item"><a href="#">{parent.name}</a>'
                 + submenu
                 + "</li>"
             )
         else:
-            main_menu += (
-                f"<li><a href=/{parent.target_slug}.html>{parent.name}</a></li>"
-            )
+            if parent.name == "Home":
+                main_menu += (
+                    f'<li class="base-nav-item"><a href="/">{parent.name}</a></li>'
+                )
+            else:
+                main_menu += f'<li class="base-nav-item"><a href="/{parent.target_slug}.html">{parent.name}</a></li>'
 
-    main_menu += "</ul>"
-    print(main_menu)
+    main_menu += '</ul><span class="nav-end"></span>'
 
     makedirs(build_base_path, exist_ok=True)
 
@@ -136,7 +135,7 @@ def build():
 
         page_built = (
             layout.replace(r"{{nav}}", main_menu)
-            .replace(r"{{title}}", page["title"]["rendered"])
+            .replace(r"{{title}}", page["title"]["rendered"] if not is_index else "")
             .replace(r"{{contents}}", page["content"]["rendered"])
         )
         with build_base_path.joinpath(
@@ -146,4 +145,6 @@ def build():
 
 
 if __name__ == "__main__":
+    print("Rebuilding...")
     build()
+    print("Complete!")
