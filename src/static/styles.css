@@ -2,6 +2,7 @@
     --primary: 	hsl(174, 100%, 29%);
     --primary-hover-bg: hsl(174, 100%, 26%);
     --primary-hover-fg: hsl(174, 100%, 40%);
+    --body-width: 768px;
 }
 
 @font-face {
@@ -99,10 +100,16 @@ nav .dropdown-content a:hover {
 }
 
 article {
-    max-width: 768px;
+    max-width: var(--body-width);
     margin: auto;
     font-size: 18px;
     line-height: 26px;
+}
+
+article .wp-block-image {
+    margin: 0;
+    margin: auto;
+    text-align: center;
 }
 
 article figure {
@@ -110,9 +117,10 @@ article figure {
 }
 
 article figure img {
-    max-width: 100%;
+    max-width: var(--body-width);
     height: auto;
     border-radius: 5px;
+    margin: auto;
 }
 
 article a {
