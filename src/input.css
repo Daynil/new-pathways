@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+
+:root {
+    --primary: 	hsl(174, 100%, 29%);
+    --primary-hover-bg: hsl(174, 100%, 26%);
+    --primary-hover-fg: hsl(174, 100%, 40%);
+    --body-width: 768px;
+}
+
+@font-face {
+    font-family: 'WorkSans-Regular';
+    src: url('static/WorkSans-Regular.ttf')
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'WorkSans-Regular';
+}
+
+h1 {
+    text-align: center;
+    font-size: 46px;
+}
+
+.transition {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.push {
+    margin-left: auto;
+}
+
+nav {
+    background-color: var(--primary);
+    height: 64px;
+}
+
+nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.base-nav {
+    padding: 7px 30px;
+}
+
+.base-nav-item {
+    margin-left: 4px;
+}
+
+nav .logo {
+    position: relative;
+    top: -4px;
+}
+
+nav li a {
+    display: block;
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+
+    border-radius: 5px;
+
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+}
+
+nav .dropdown-content a {
+    color: black;
+}
+
+nav li a:hover {
+    background-color: var(--primary-hover-bg);
+}
+
+nav .dropdown-content a:hover {
+    background-color: rgb(229 231 235);
+}
+
+.dropdown {
+    position: relative;
+}
+  
+.dropdown-content {
+    width: 250px;
+    display: none;
+    position: absolute;
+    background-color: white;
+    border-radius: 5px;
+
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.5);
+}
+  
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+article {
+    max-width: var(--body-width);
+    margin: auto;
+    font-size: 18px;
+    line-height: 26px;
+}
+
+article .wp-block-image {
+    margin: 0;
+    margin: auto;
+    text-align: center;
+}
+
+article figure {
+    margin: 0;
+}
+
+article figure img {
+    max-width: var(--body-width);
+    height: auto;
+    border-radius: 5px;
+    margin: auto;
+}
+
+article a {
+    color: var(--primary);
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+article a:hover {
+    color: var(--primary-hover-fg);
+}
+
+@tailwind utilities;
