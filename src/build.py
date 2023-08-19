@@ -9,6 +9,7 @@ from shutil import copy
 from urllib import request
 
 wp_api_base_path = "http://admin.innerpathllc.com/wp-json/wp/v2"
+project_base_path = Path(__file__).parent.parent
 
 
 @dataclass
@@ -120,8 +121,8 @@ def get_menu() -> str:
 
 
 def build():
-    build_base_path = Path(__file__).parent.parent.joinpath("public")
-    src = Path(__file__).parent
+    src = project_base_path / "src"
+    build_base_path = project_base_path / "public"
 
     main_menu = get_menu()
 

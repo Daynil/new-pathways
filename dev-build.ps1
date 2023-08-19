@@ -1,1 +1,1 @@
-cd src && watchexec --exts py,js,html,css f:/Coding/web/Production/new-pathways/np-env/python.exe f:/Coding/web/Production/new-pathways/src/build.py
+cd src && watchexec --exts py,js,html,css python f:/Coding/web/Production/new-pathways/src/build.py
