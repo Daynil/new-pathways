@@ -8,6 +8,8 @@ from pathlib import Path
 from shutil import copy
 from urllib import request
 
+from utilities import cprint, bcolors
+
 wp_api_base_path = "http://admin.innerpathllc.com/wp-json/wp/v2"
 project_base_path = Path(__file__).parent.parent
 
@@ -156,6 +158,6 @@ def build():
 
 
 if __name__ == "__main__":
-    print("Rebuilding...")
+    cprint("Rebuilding...", bcolors.WARNING)
     build()
-    print("Complete!")
+    cprint("Complete!", bcolors.OKGREEN)

@@ -1,1 +1,2 @@
-cd src && watchexec --exts py,js,html,css python f:/Coding/web/Production/new-pathways/src/build.py
+Start-Process -FilePath "python" -ArgumentList "-m", "http.server", "--directory", "./public" -NoNewWindow
+watchexec -w ./src/ --exts py,js,html,css python f:/Coding/web/Production/new-pathways/src/build.py
