@@ -1,6 +1,7 @@
 # Just for using e.g. list[Item]
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from json import loads
 from os import listdir, makedirs
@@ -25,7 +26,14 @@ class NavItem:
     children: list[NavItem]
 
 
-def wp_get_all(url: str):
+def wp_get_all(url: str, use_cache=False):
+    cache = project_base_path / f"src/tmp/wp_{url}.json"
+
+    if use_cache:
+        if cache.exists():
+            with cache.open("r") as f:
+                return json.load(f)
+
     wp_res = []
     cur_res_length = 100
     cur_page = 1
@@ -38,6 +46,10 @@ def wp_get_all(url: str):
         wp_res += wp_res_page
         cur_res_length = len(wp_res_page)
         cur_page += 1
+
+    if use_cache:
+        with cache.open("w+") as f:
+            json.dump(wp_res, f)
 
     return wp_res
 
@@ -95,8 +107,8 @@ def menu_dropdown(name: str, children: list[DropdownChild]) -> str:
     return parent_template.replace(children_tag, children_template)
 
 
-def get_menu() -> str:
-    menu = wp_get_all("menu")
+def get_menu(use_cache=False) -> str:
+    menu = wp_get_all("menu", use_cache)
     nav_arr: list[NavItem] = []
 
     # Convert raw menu dictionary to typed Python class
@@ -169,7 +181,7 @@ def get_menu() -> str:
     return main_menu
 
 
-def build(clean=False):
+def build(clean=False, use_wp_cache=False):
     src = project_base_path / "src"
     build_base_path = project_base_path / "public"
 
@@ -182,10 +194,15 @@ def build(clean=False):
     for static_filename in listdir(src / "static"):
         copy(src / "static" / static_filename, build_base_path)
 
+    # Copy cached static file to public dir only on clean build
+    if clean:
+        for static_filename in listdir(src / "static-cached"):
+            copy(src / "static-cached" / static_filename, build_base_path)
+
     with src.joinpath("layout.html").open("r") as f:
         layout = f.read()
 
-    pages = wp_get_all("pages")
+    pages = wp_get_all("pages", use_wp_cache)
 
     # For each standard Wordpress page, generate an HTML page using our layout template
     for page in pages:
@@ -195,7 +212,7 @@ def build(clean=False):
             continue
 
         page_built = (
-            layout.replace(r"{{nav}}", get_menu())
+            layout.replace(r"{{nav}}", get_menu(use_wp_cache))
             .replace(r"{{title}}", page["title"]["rendered"] if not is_index else "")
             .replace(r"{{contents}}", page["content"]["rendered"])
         )
@@ -207,5 +224,5 @@ def build(clean=False):
 
 if __name__ == "__main__":
     cprint("Rebuilding...", bcolors.WARNING)
-    build()
+    build(use_wp_cache=True)
     cprint("Complete!", bcolors.OKGREEN)
