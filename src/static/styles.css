@@ -1,11 +1,16 @@
 :root {
     --primary: 	hsl(174, 100%, 29%);
     --primary-hover-bg: hsl(174, 100%, 26%);
+    --primary-active-bg: hsl(174, 100%, 32%);
     --primary-hover-fg: hsl(174, 100%, 40%);
     --submenu-hover-bg: rgb(229 231 235);
     --body-width: 768px;
-    /* From bootstrap (lg breakpoint) */
-    --mobile-width: 992px;
+    /* Bootstrap breakpoints */
+    --sm: 576px;
+    --md: 768px;
+    --lg: 992px;
+    --xl: 1200px;
+    --xxl: 1400px;
 }
 
 @font-face {
@@ -16,7 +21,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    font-family: 'WorkSans-Regular';
+    font-family: 'WorkSans-Regular', serif;
 }
 
 h1 {
@@ -47,7 +52,7 @@ h1 {
 }
 
 .nav-link.active {
-    background-color: var(--primary-hover-bg) !important;
+    background-color: var(--primary-active-bg) !important;
 }
 
 .dropdown-item {
@@ -60,7 +65,7 @@ h1 {
     background-color: var(--submenu-hover-bg);
 }
 
-@media(max-width: var(--mobile-width)) {
+@media(max-width: var(--xl)) {
     .navbar-collapse {
         margin-top: 4px !important;
     }

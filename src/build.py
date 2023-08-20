@@ -7,6 +7,7 @@ from os import listdir, makedirs
 from pathlib import Path
 from shutil import copy
 from urllib import request
+from typing import Union
 
 from utilities import cprint, bcolors
 
@@ -39,6 +40,59 @@ def wp_get_all(url: str):
         cur_page += 1
 
     return wp_res
+
+
+class DropdownChild:
+    name: Union[str, None]
+    href: str
+
+    def __init__(self, name: Union[str, None], href: str):
+        self.name = name
+        self.href = href
+
+
+def menu_item_solo(name: str, href: str) -> str:
+    template = f"""
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="{href}">
+            {name}
+          </a>
+        </li>
+    """
+    return template.strip()
+
+
+def menu_dropdown_child(child: DropdownChild) -> str:
+    if not child.name:
+        return '<li><hr class="dropdown-divider"></li>'
+    else:
+        return f"""
+            <li>
+                <a class="dropdown-item" href="{child.href}">
+                    {child.name}
+                </a>
+            </li>
+        """.strip()
+
+
+def menu_dropdown(name: str, children: list[DropdownChild]) -> str:
+    children_tag = "{{children}}"
+    parent_template = f"""
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {name}
+          </a>
+          <ul class="dropdown-menu">
+            {children_tag}
+          </ul>
+        </li>
+    """
+
+    children_template = ""
+    for child in children:
+        children_template += menu_dropdown_child(child)
+
+    return parent_template.replace(children_tag, children_template)
 
 
 def get_menu() -> str:
@@ -91,42 +145,36 @@ def get_menu() -> str:
         if len(parent.children) > 0:
             anchors.append({"id": parent.wp_id, "el": None})
 
-    main_menu = '<ul class="base-nav"><span class="logo"><img src="logo.png" /></span><span class="push"></span>'
+    main_menu = ""
     parent_items.sort(key=lambda item: item.sort_order)
 
     # Generate the HTML string for all the nav links
     for parent in parent_items:
         if len(parent.children) > 0:
-            submenu = '<ul class="dropdown-content">'
             parent.children.sort(key=lambda item: item.sort_order)
-            for child in parent.children:
-                submenu += (
-                    f'<li><a href="/{child.target_slug}.html">{child.name}</a></li>'
-                )
-            submenu += "</ul>"
-            main_menu += (
-                f'<li class="dropdown base-nav-item"><a href="#">{parent.name}</a>'
-                + submenu
-                + "</li>"
-            )
+            children = [
+                DropdownChild(name=child.name, href=f"/{child.target_slug}.html")
+                for child in parent.children
+            ]
+            main_menu += menu_dropdown(parent.name, children)
         else:
             if parent.name == "Home":
-                main_menu += (
-                    f'<li class="base-nav-item"><a href="/">{parent.name}</a></li>'
-                )
+                main_menu += menu_item_solo(parent.name, "/")
             else:
-                main_menu += f'<li class="base-nav-item"><a href="/{parent.target_slug}.html">{parent.name}</a></li>'
+                main_menu += menu_item_solo(parent.name, f"/{parent.target_slug}.html")
 
-    main_menu += '</ul><span class="nav-end"></span>'
+    with project_base_path.joinpath("src/navbar.html").open("r") as f:
+        main_menu = f.read().replace("{{main_menu}}", main_menu)
 
     return main_menu
 
 
-def build():
+def build(clean=False):
     src = project_base_path / "src"
     build_base_path = project_base_path / "public"
 
-    main_menu = get_menu()
+    if clean and build_base_path.exists():
+        build_base_path.unlink()
 
     makedirs(build_base_path, exist_ok=True)
 
@@ -147,7 +195,7 @@ def build():
             continue
 
         page_built = (
-            layout.replace(r"{{nav}}", main_menu)
+            layout.replace(r"{{nav}}", get_menu())
             .replace(r"{{title}}", page["title"]["rendered"] if not is_index else "")
             .replace(r"{{contents}}", page["content"]["rendered"])
         )
