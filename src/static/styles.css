@@ -8,6 +8,8 @@
 
 @font-face {
     font-family: 'WorkSans-Regular';
+    /* Built files will be in the same folder, ignore */
+    /*noinspection CssUnknownTarget*/
     src: url('WorkSans-Regular.ttf');
 }
 
@@ -18,10 +20,54 @@ html, body {
 }
 
 h1 {
+    max-width: var(--bs-breakpoint-md);
     text-align: center;
     font-size: 46px;
+    margin: 40px auto;
 }
 
+article {
+    max-width: var(--bs-breakpoint-md);
+    margin: 10px auto;
+    font-size: 18px;
+    line-height: 26px;
+}
+
+@media (max-width: 768px) {
+    article {
+        padding: 0 20px;
+    }
+}
+
+article .wp-block-image {
+    margin: auto;
+    text-align: center;
+}
+
+article figure {
+    margin: 0;
+}
+
+article figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: 10px auto;
+}
+
+article a {
+    color: var(--primary);
+
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+article a:hover {
+    color: var(--primary-hover-fg);
+}
+
+/*** Bootstrap Customizations ***/
 .navbar {
     background-color: var(--primary) !important;
 }
@@ -68,43 +114,8 @@ h1 {
     }
 }
 
-article {
-    max-width: var(--bs-breakpoint-lg);
-    margin: 10px auto;
-    font-size: 18px;
-    line-height: 26px;
+.navbar-toggler {
+    border: none;
+    color: white !important;
 }
-
-@media (max-width: 992px) {
-    article {
-        padding: 0 20px;
-    }
-}
-
-article .wp-block-image {
-    margin: auto;
-    text-align: center;
-}
-
-article figure {
-    margin: 0;
-}
-
-article figure img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin: 10px auto;
-}
-
-article a {
-    color: var(--primary);
-
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-}
-
-article a:hover {
-    color: var(--primary-hover-fg);
-}
+/*** End Bootstrap Customizations ***/
