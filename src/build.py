@@ -190,10 +190,6 @@ def build(clean=False, use_wp_cache=False):
 
     makedirs(build_base_path, exist_ok=True)
 
-    # Copy all static files to the public dir as is
-    for static_filename in listdir(src / "static"):
-        copy(src / "static" / static_filename, build_base_path)
-
     # Copy cached static file to public dir only on clean build
     if clean:
         for static_filename in listdir(src / "static-cached"):
@@ -203,10 +199,30 @@ def build(clean=False, use_wp_cache=False):
         layout = f.read()
 
     pages = wp_get_all("pages", use_wp_cache)
+    pdfs = [
+        {
+            "slug": pdf["slug"],
+            "display_string": pdf["title"]["rendered"],
+            "url": pdf["source_url"],
+        }
+        for pdf in wp_get_all("media")
+        if pdf["mime_type"] == "application/pdf"
+    ]
+
+    for pdf in pdfs:
+        pdf_path = build_base_path.joinpath(f"{pdf['slug']}.pdf")
+        # For dev purposes, avoid redownloading every rebuild
+        if not pdf_path.exists():
+            request.urlretrieve(pdf["url"], pdf_path)
+
+    # Copy all static files to the public dir as is
+    for static_filename in listdir(src / "static"):
+        copy(src / "static" / static_filename, build_base_path)
 
     # For each standard Wordpress page, generate an HTML page using our layout template
     for page in pages:
-        is_index = page["title"]["rendered"] == "Home"
+        page_name = page["title"]["rendered"]
+        is_index = page_name == "Home"
 
         if not page["status"] == "publish":
             continue
@@ -216,6 +232,33 @@ def build(clean=False, use_wp_cache=False):
             .replace(r"{{title}}", page["title"]["rendered"] if not is_index else "")
             .replace(r"{{contents}}", page["content"]["rendered"])
         )
+
+        # Add js reference to html if it exists
+        if src.joinpath(f"static/{page_name}.js").exists():
+            page_built = page_built.replace(
+                "{{head}}",
+                f'<script type="text/javascript" src="/{page_name}.js"></script>',
+            )
+        else:
+            page_built = page_built.replace("{{head}}", "")
+
+        # Unique page modifications
+        if page_name == "Forms":
+            pdf_template = '<div class="forms">'
+
+            for pdf in pdfs:
+                pdf_template += f"""
+                <a href="/{pdf['slug']}.pdf">
+                    <span class='pdf'>
+                        <img alt='pdf icon' src='/pdf.svg'/>{pdf['display_string']}
+                    <span>
+                </a>\n"""
+
+            pdf_template += "</div>"
+
+            page_pieces = page_built.split("</article>")
+            page_built = page_pieces[0] + f"\n{pdf_template}\n" + page_pieces[1]
+
         with build_base_path.joinpath(
             "index.html" if is_index else f"{page['slug']}.html",
         ).open("w", encoding="utf-8") as f:

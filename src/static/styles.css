@@ -67,9 +67,25 @@ article a:hover {
     color: var(--primary-hover-fg);
 }
 
+.forms {
+    display: flex;
+    flex-direction: column;
+}
+
+.pdf {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.pdf img {
+    margin-right: 5px;
+}
+
 /*** Bootstrap Customizations ***/
 .navbar {
     background-color: var(--primary) !important;
+    padding: 0 !important;
 }
 
 .nav-item {
