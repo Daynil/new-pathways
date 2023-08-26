@@ -10,7 +10,7 @@ from shutil import copy
 from urllib import request
 from typing import Union
 
-from utilities import cprint, bcolors
+from utilities import cprint, CColors
 
 wp_api_base_path = "http://admin.innerpathllc.com/wp-json/wp/v2"
 project_base_path = Path(__file__).parent.parent
@@ -266,6 +266,6 @@ def build(clean=False, use_wp_cache=False):
 
 
 if __name__ == "__main__":
-    cprint("Rebuilding...", bcolors.WARNING)
+    cprint("Rebuilding...", CColors.WARNING)
     build(use_wp_cache=True)
-    cprint("Complete!", bcolors.OKGREEN)
+    cprint("Complete!", CColors.OKGREEN)

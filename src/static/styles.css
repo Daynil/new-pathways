@@ -1,8 +1,12 @@
 :root {
-    --primary: 	hsl(174, 100%, 29%);
-    --primary-hover-bg: hsl(174, 100%, 26%);
-    --primary-active-bg: hsl(174, 100%, 32%);
-    --primary-hover-fg: hsl(174, 100%, 40%);
+    --primary: 	hsl(183, 98%, 26%);
+    --primary-hover-bg: hsl(183, 100%, 28%);
+    --primary-active-bg: hsl(183, 100%, 34%);
+    --primary-hover-fg: hsl(183, 100%, 42%);
+    /*--primary: 	hsl(174, 100%, 29%);*/
+    /*--primary-hover-bg: hsl(174, 100%, 26%);*/
+    /*--primary-active-bg: hsl(174, 100%, 32%);*/
+    /*--primary-hover-fg: hsl(174, 100%, 40%);*/
     --submenu-hover-bg: rgb(229 231 235);
 }
 

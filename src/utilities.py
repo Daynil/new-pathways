@@ -1,4 +1,4 @@
-class bcolors:
+class CColors:
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKCYAN = "\033[96m"
@@ -10,5 +10,5 @@ class bcolors:
     UNDERLINE = "\033[4m"
 
 
-def cprint(text: str, color: bcolors):
-    print(f"{color}{text}{bcolors.ENDC}")
+def cprint(text: str, color: CColors):
+    print(f"{color}{text}{CColors.ENDC}")
