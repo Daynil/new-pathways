@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    <title>{{ title }}</title>
+{% endblock title %}
+
+{% block content %}
+    {{ wordpress_source }}
+    <div class='forms'>
+        {% for pdf in pdfs %}
+            <a href="/{{ pdf['slug'] }}.pdf">
+                <span class='pdf'>
+                    <img alt='pdf icon' src='/pdf.svg'/>
+                    {{ pdf['display_string'] }}
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock content %}
