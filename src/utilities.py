@@ -31,7 +31,7 @@ Find blocks, capturing block variable name and block inner content
 """
 blocks_re = re.compile(r"{% block (.\S+) %}(.*?){% endblock (.\S+) %}", re.DOTALL)
 """
-Find and capture variables
+ind and capture variables
 {{ variable }}
 """
 variables_re = re.compile(r"{{\s?(\S+)\s?}}", re.DOTALL)

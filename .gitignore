@@ -120,3 +120,5 @@ pip-delete-this-directory.txt
 # Built site
 public
 src/tmp
+
+.idea
